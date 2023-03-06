@@ -5,19 +5,20 @@
 version: '3.9'
 
 services:
-  chrisomatic:
-    image: ghcr.io/fnndsc/chrisomatic:0.4.0
-    networks:
-      - local
-    volumes:
-      - "./chrisomatic.yml:/chrisomatic.yml:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock:rw"
-    userns_mode: host
-    depends_on:
-      - chris
-      - chris_store
-    profiles:
-      - tools
+  # removed for podman-compose
+  # chrisomatic:
+  #   image: ghcr.io/fnndsc/chrisomatic:0.4.0
+  #   networks:
+  #     - local
+  #   volumes:
+  #     - "./chrisomatic.yml:/chrisomatic.yml:ro"
+  #     - "/var/run/docker.sock:/var/run/docker.sock:rw"
+  #   userns_mode: host
+  #   depends_on:
+  #     - chris
+  #     - chris_store
+  #   profiles:
+  #     - tools
   chris:
     container_name: chris
     image: ghcr.io/fnndsc/cube:4.0.0.pre6
@@ -162,26 +163,26 @@ services:
     labels:
       org.chrisproject.role: "pfcon"
 
-  pman:
-    image: ghcr.io/fnndsc/pman:4.0.2
-    container_name: pman
-    environment:
-      CONTAINER_ENV: swarm
-      SECRET_KEY: secret
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:rw
-      - ./workarounds/storebase.sh:/entrypoint.sh:ro
-    entrypoint: /entrypoint.sh
-    depends_on:
-      - swarm-status
-      - pfcon
-    ports:
-      - "5010:5010"
-    networks:
-      - remote
-    userns_mode: "host"
-    labels:
-      org.chrisproject.role: "pman"
+  # pman:  # removed for podman-compose
+  #   image: ghcr.io/fnndsc/pman:4.0.2
+  #   container_name: pman
+  #   environment:
+  #     CONTAINER_ENV: swarm
+  #     SECRET_KEY: secret
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:rw
+  #     - ./workarounds/storebase.sh:/entrypoint.sh:ro
+  #   entrypoint: /entrypoint.sh
+  #   depends_on:
+  #     - swarm-status
+  #     - pfcon
+  #   ports:
+  #     - "5010:5010"
+  #   networks:
+  #     - remote
+  #   userns_mode: "host"
+  #   labels:
+  #     org.chrisproject.role: "pman"
 
   chris_ui:
     image: ghcr.io/fnndsc/chris_ui:20230223.203-f0074403
@@ -247,15 +248,16 @@ services:
   # Provisioning
   # ====================
 
+  # removed for podman-compose
   # start docker swarm for pman
-  swarm-status:
-    image: docker.io/library/docker:latest
-    container_name: swarm-status
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./workarounds/swarm.sh:/entrypoint.sh
-    userns_mode: "host"
-    entrypoint: /entrypoint.sh
+  # swarm-status:
+  #   image: docker.io/library/docker:latest
+  #   container_name: swarm-status
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ./workarounds/swarm.sh:/entrypoint.sh
+  #   userns_mode: "host"
+  #   entrypoint: /entrypoint.sh
 
 networks:
   local:
