@@ -23,10 +23,13 @@ services:
     image: ghcr.io/fnndsc/cube:4.0.0.pre12
     ports:
       - "8000:8000"
+    volumes:
+      - chris_files:/var/chris:rw
     depends_on:
       - chris_db
       - swift
       - queue
+      - cube-nonroot-user-volume-fix
     networks:
       - local
     env_file: secrets.env
@@ -39,6 +42,8 @@ services:
   worker:
     image: ghcr.io/fnndsc/cube:4.0.0.pre12
     command: celery -A core worker -c 4 -l info -Q main1,main2
+    volumes:
+      - chris_files:/var/chris:rw
     env_file: secrets.env
     environment:
       DJANGO_DB_MIGRATE: "off"
@@ -48,11 +53,14 @@ services:
       - swift
       - queue
       - pfcon
+      - cube-nonroot-user-volume-fix
     restart: on-failure
     networks:
       - local
   worker_periodic:
     image: ghcr.io/fnndsc/cube:4.0.0.pre12
+    volumes:
+      - chris_files:/var/chris:rw
     environment:
       DJANGO_DB_MIGRATE: "off"
       DJANGO_COLLECTSTATIC: "off"
@@ -61,12 +69,15 @@ services:
     depends_on:
       - chris_db
       - queue
+      - cube-nonroot-user-volume-fix
     restart: on-failure
     networks:
       - local
   scheduler:
     image: ghcr.io/fnndsc/cube:4.0.0.pre12
     command: celery -A core beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - chris_files:/var/chris:rw
     env_file: secrets.env
     environment:
       DJANGO_DB_MIGRATE: "off"
@@ -74,6 +85,7 @@ services:
     depends_on:
       - chris_db
       - queue
+      - cube-nonroot-user-volume-fix
     restart: on-failure
     networks:
       - local
@@ -238,6 +250,14 @@ services:
 
   # Non-root container user workarounds
 
+  cube-nonroot-user-volume-fix:
+    image: docker.io/library/alpine:latest
+    volumes:
+      - chris_files:/var/chris:rw
+    user: root
+    command: chown 1000 /var/chris
+    restart: "no"
+
   pfdcm-nonroot-user-volume-fix:
     image: docker.io/library/alpine:latest
     volumes:
@@ -260,6 +280,8 @@ networks:
   pacs:
 
 volumes:
+  chris_files:
+    name: minichris_files
   chris_db_data:
   chris_store_db_data:
   swift_storage:
