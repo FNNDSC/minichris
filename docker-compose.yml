@@ -6,7 +6,7 @@ version: '3.9'
 
 services:
   chrisomatic:
-    image: ghcr.io/fnndsc/chrisomatic:0.4.1
+    image: ghcr.io/fnndsc/chrisomatic:0.5.0
     networks:
       - local
     volumes:
@@ -36,7 +36,7 @@ services:
       DJANGO_DB_MIGRATE: "on"
       DJANGO_COLLECTSTATIC: "on"
     labels:
-      org.chrisproject.role: "ChRIS ultron backEnd"
+      org.chrisproject.role: "ChRIS_ultron_backEnd"
       org.chrisproject.miniChRIS: "miniChRIS"
   worker:
     image: ghcr.io/fnndsc/cube:4.0.0.pre12
