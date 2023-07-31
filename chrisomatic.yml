@@ -26,6 +26,31 @@ cube:
     - name: pl-tsdircopy
       version: 1.2.1
     - name: pl-topologicalcopy
-      version: 0.2
+      version: 0.2.6
     - name: pl-simpledsapp
       version: 2.1.0
+    - name: pl-pfdorun
+      version: 2.2.8
+    - name: pl-pfdicom_tagsub
+      version: 3.2.4
+    - name: pl-lld_inference
+      version: 2.2.10
+    - name: pl-markimg
+      version: 1.2.30
+    - name: pl-csv2json
+      version: 1.2.2
+    - name: pl-dicommake
+      version: 2.2.2
+    - name: pl-dylld
+      version: 4.4.34
+    - name: pl-shexec
+      version: 1.2.14
+    - name: pl-dcm2mha_cnvtr
+      version: 1.2.22
+    - name: pl-orthanc_push
+      version: 1.2.2
+    - name: pl-pfdicom_tagsub
+      version: 3.2.4
+    - dock_image: ghcr.io/fnndsc/pl-pfdicom_tagextract
+      version: 3.1.3
+

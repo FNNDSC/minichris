@@ -1,0 +1,7 @@
+{
+    "local": {
+        "storagetype": "fs",
+        "storepath": "/var/chris"
+    }
+}
+

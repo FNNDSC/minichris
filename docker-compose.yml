@@ -38,6 +38,7 @@ services:
     labels:
       org.chrisproject.role: "ChRIS ultron backEnd"
       org.chrisproject.miniChRIS: "miniChRIS"
+    
   worker:
     image: ghcr.io/fnndsc/cube:4.0.0.pre12
     command: celery -A core worker -c 4 -l info -Q main1,main2
@@ -209,29 +210,33 @@ services:
       - pacs
 
   pfdcm:
-    image: ghcr.io/fnndsc/pfdcm:3.0.12
+    image: ghcr.io/fnndsc/pfdcm:3.1.2
     container_name: pfdcm
+    environment:
+      MAX_WORKERS: 1
     volumes:
       - pfdcm:/home/dicom:rw
       - ./pfdcm-services:/home/dicom/services:ro
+      - chris_files:/var/chris:rw
     ports:
       - "4005:4005"
     networks:
       - pacs
       - local
-    user: "10100"
+    user: "1001"
 
   pfdcm-listener:
-    image: ghcr.io/fnndsc/pfdcm:3.0.12
+    image: ghcr.io/fnndsc/pfdcm:3.1.2
     command: sh -c "mkdir -vp /tmp/data && storescp --fork -od /tmp/data -pm -sp -xcr '/usr/local/bin/px-repack --xcrdir \"#p\" --xcrfile \"#f\" --verbosity 0 --logdir /home/dicom/log --datadir /home/dicom/data --cleanup' 11113"
     volumes:
       - pfdcm:/home/dicom:rw
     networks:
       - pacs
-    user: "10100"
+    user: "1001"
     restart: on-failure
     depends_on:
       - pfdcm-nonroot-user-volume-fix
+      
 
   # Non-root container user workarounds
 
@@ -248,8 +253,8 @@ services:
     volumes:
       - pfdcm:/home/dicom:rw
     user: root
-    command: chown 10100 /home/dicom
-    restart: "no"
+    command: chown 1001 /home/dicom
+    restart: "no"    
 
   pfcon-nonroot-user-volume-fix:
     image: docker.io/library/alpine:latest
